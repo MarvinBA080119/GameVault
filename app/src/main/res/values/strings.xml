@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GameVault</string>
+
+    <!-- Login -->
+    <string name="login_title">GameVault</string>
+    <string name="login_tagline">Tu biblioteca de videojuegos</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="btn_login">Ingresar</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="go_to_register">¿No tienes cuenta? Regístrate</string>
+
+    <!-- Registro -->
+    <string name="register_title">Crear cuenta</string>
+    <string name="register_subtitle">Únete y empieza a explorar miles de juegos</string>
+    <string name="hint_confirm_password">Confirmar contraseña</string>
+    <string name="btn_register">Registrarse</string>
+    <string name="go_to_login">¿Ya tienes cuenta? Iniciar sesión</string>
+
+    <!-- Datos personales -->
+    <string name="personal_title">Datos personales</string>
+    <string name="personal_step">Paso 2 de 2 · Casi listo, gamer</string>
+    <string name="personal_section">Cuéntanos un poco sobre ti</string>
+    <string name="hint_nombre">Nombre(s)</string>
+    <string name="hint_apellidos">Apellidos</string>
+    <string name="hint_celular">Número de celular</string>
+    <string name="hint_fecha">Fecha de nacimiento</string>
+    <string name="fecha_hint_helper">Toca para abrir el calendario</string>
+    <string name="btn_continuar">Empezar a explorar</string>
+
+    <!-- Home -->
+    <string name="home_title">GameVault</string>
+    <string name="search_hint">Busca un videojuego…</string>
+</resources>

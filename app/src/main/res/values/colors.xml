@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta principal GameVault (Doc 01) -->
+    <color name="primary_dark">#5B21B6</color>
+    <color name="primary">#7C3AED</color>
+    <color name="primary_light">#A78BFA</color>
+
+    <!-- Acentos -->
+    <color name="accent_rating">#F59E0B</color>
+    <color name="success">#10B981</color>
+    <color name="highlight">#EC4899</color>
+
+    <!-- Texto -->
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+
+    <!-- Fondo -->
+    <color name="bg_white">#FFFFFF</color>
+    <color name="bg_surface">#F8F5FF</color>
+
+    <!-- Error -->
+    <color name="error_red">#EF4444</color>
+</resources>
