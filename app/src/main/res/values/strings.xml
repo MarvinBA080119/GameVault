@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Arcadia</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Login -->
+    <string name="appName">Arcadia</string>
+    <string name="appTagline">Tu biblioteca de videojuegos</string>
+    <string name="mail">Email</string>
+    <string name="emailHint">tucorreo@email.com</string>
+    <string name="password">Contraseña</string>
+    <string name="confirmPassword">Confirmar contraseña</string>
+    <string name="signIn">Ingresar</string>
+    <string name="register">¿No tienes cuenta? Regístrate</string>
+
+    <!-- Register -->
+    <string name="createAccountTitle">Crear cuenta</string>
+    <string name="registerSubtitle">Únete y empieza a explorar miles de juegos</string>
+    <string name="registerButton">Registrarse</string>
+    <string name="backToSignIn">¿Ya tienes cuenta? Inicia sesión</string>
+
+    <!-- Personal Info -->
+    <string name="personalInfoTitle">Datos personales</string>
+    <string name="personalInfoStep">Paso 2 de 2 · Casi listo, gamer</string>
+    <string name="personalInfoIntro">Cuéntanos un poco sobre ti</string>
+    <string name="firstName">Nombre(s)</string>
+    <string name="lastName">Apellidos</string>
+    <string name="username">Nombre de usuario</string>
+    <string name="phone">Número de celular</string>
+    <string name="birthDate">Fecha de nacimiento</string>
+    <string name="datePickerHint">Toca para abrir el calendario</string>
+    <string name="save">Empezar a explorar</string>
+
+    <!-- Tabs -->
+    <string name="tab_home">Inicio</string>
+    <string name="tab_wishlist">Lista</string>
+    <string name="tab_account">Cuenta</string>
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Paleta Paoca -->
+    <color name="primary">#6B4A98</color>          <!-- morado principal -->
+    <color name="primaryPink">#E73371</color>      <!-- rosa magenta -->
+    <color name="primaryYellow">#F9B333</color>    <!-- amarillo -->
+    <color name="primaryPinkLight">#EA4E88</color> <!-- rosa claro -->
+
+    <!-- Fondo y texto -->
+    <color name="mainBackground">#FFFFFF</color>
+    <color name="textPrimary">#1F1B2E</color>
+    <color name="textSecondary">#64748B</color>
+    <color name="textTertiary">#94A3B8</color>
+    <color name="inputBackground">#F8F7FB</color>
+    <color name="strokeColor">#E8E4F0</color>
+    <color name="disabled">#C7C7C7</color>
+</resources>
