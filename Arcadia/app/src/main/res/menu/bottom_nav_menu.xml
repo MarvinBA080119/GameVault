@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/gamesFragment" android:icon="@drawable/home_ic" android:title="@string/tab_home"/>
+    <item android:id="@+id/wishlistFragment" android:icon="@drawable/wishlist_ic" android:title="@string/tab_wishlist"/>
+    <item android:id="@+id/accountFragment" android:icon="@drawable/account_ic" android:title="@string/tab_account"/>
+</menu>

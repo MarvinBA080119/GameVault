@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/mainBackground" tools:context=".onboarding.personal.PersonalInfoFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputLayout style="@style/passwordTil"
+            android:id="@+id/firstNameTil" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginStart="16dp" android:layout_marginTop="32dp" android:layout_marginEnd="16dp"
+            android:hint="@string/firstName" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent">
+            <com.google.android.material.textfield.TextInputEditText style="@style/passwordTiet"
+                android:id="@+id/firstNameTiet" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:inputType="textPersonName"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout style="@style/passwordTil"
+            android:id="@+id/lastNameTil" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginStart="16dp" android:layout_marginTop="16dp" android:layout_marginEnd="16dp"
+            android:hint="@string/lastName" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/firstNameTil">
+            <com.google.android.material.textfield.TextInputEditText style="@style/passwordTiet"
+                android:id="@+id/lastNameTiet" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:inputType="textPersonName"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout style="@style/passwordTil"
+            android:id="@+id/usernameTil" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginStart="16dp" android:layout_marginTop="16dp" android:layout_marginEnd="16dp"
+            android:hint="@string/username" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/lastNameTil">
+            <com.google.android.material.textfield.TextInputEditText style="@style/passwordTiet"
+                android:id="@+id/usernameTiet" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:inputType="text"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout style="@style/passwordTil"
+            android:id="@+id/phoneTil" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginStart="16dp" android:layout_marginTop="16dp" android:layout_marginEnd="16dp"
+            android:hint="@string/phone" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/usernameTil">
+            <com.google.android.material.textfield.TextInputEditText style="@style/passwordTiet"
+                android:id="@+id/phoneTiet" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:inputType="phone"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout style="@style/passwordTil"
+            android:id="@+id/birthDateTil" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginStart="16dp" android:layout_marginTop="16dp" android:layout_marginEnd="16dp"
+            android:hint="@string/birthDate" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/phoneTil">
+            <com.google.android.material.textfield.TextInputEditText style="@style/passwordTiet"
+                android:id="@+id/birthDateTiet" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:focusable="false" android:clickable="true" android:inputType="none"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton style="@style/signUpButton"
+            android:id="@+id/saveButton" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginStart="16dp" android:layout_marginTop="24dp" android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp" android:text="@string/save"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/birthDateTil"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

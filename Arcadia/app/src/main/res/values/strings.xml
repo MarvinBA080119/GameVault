@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Arcadia</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="mail">Correo:</string>
+    <string name="password">Contraseña:</string>
+    <string name="confirmPassword">Confirmar contraseña:</string>
+    <string name="restorePassword">Olvidé mi contraseña</string>
+    <string name="signIn">Ingresar</string>
+    <string name="register">¿No tienes cuenta? Regístrate</string>
+    <string name="backToSignIn">¿Ya tienes cuenta? Inicia sesión</string>
+    <string name="firstName">Nombre</string>
+    <string name="lastName">Apellidos</string>
+    <string name="username">Nombre de usuario</string>
+    <string name="phone">Teléfono</string>
+    <string name="birthDate">Fecha de nacimiento</string>
+    <string name="save">Guardar</string>
+    <string name="tab_home">Inicio</string>
+    <string name="tab_wishlist">Lista</string>
+    <string name="tab_account">Cuenta</string>
+</resources>
