@@ -1,5 +1,29 @@
 {
-  "project_info": { "project_number": "000000000000", "project_id": "arcadia-placeholder", "storage_bucket": "arcadia-placeholder.appspot.com" },
-  "client": [{ "client_info": { "mobilesdk_app_id": "1:000000000000:android:0000000000000000", "android_client_info": { "package_name": "com.example.arcadia" } }, "api_key": [{ "current_key": "REPLACE_WITH_YOUR_KEY" }] }],
+  "project_info": {
+    "project_number": "807856351498",
+    "project_id": "arcadia-aee40",
+    "storage_bucket": "arcadia-aee40.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:807856351498:android:79e37b6014375f34c1b2f3",
+        "android_client_info": {
+          "package_name": "com.example.arcadia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAR0zbu9JLGff3pqOZ1QUAYEQpcSgPGb7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
   "configuration_version": "1"
 }

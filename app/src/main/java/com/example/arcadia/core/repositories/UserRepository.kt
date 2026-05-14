@@ -16,7 +16,7 @@ class UserRepository : UserService {
             userCollection.document(userProfile.id).set(userProfile).await()
             ResponseService.Success(Unit)
         } catch (e: Exception) {
-            ResponseService.Error("No se pudo crear el perfil: ${e.localizedMessage}")
+            ResponseService.Error("Error en Firestore: ${e.localizedMessage ?: "Error desconocido"}")
         }
     }
 }
