@@ -20,4 +20,8 @@
 
     <!-- Error -->
     <color name="error_red">#EF4444</color>
+
+    <!-- Chips del detalle -->
+    <color name="chip_genre_bg">#EDE9FE</color>
+    <color name="platform_pill_bg">#F1F5F9</color>
 </resources>

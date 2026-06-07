@@ -2,6 +2,7 @@ package com.example.gamevault.core
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.FirebaseUser
@@ -19,10 +20,12 @@ class AuthRepository : Authentication {
             val result = auth.signInWithEmailAndPassword(email, password).await()
             result.user?.let { ResponseService.Success(it) }
                 ?: ResponseService.Error("Usuario no encontrado")
+        } catch (e: FirebaseAuthInvalidUserException) {
+            ResponseService.Error("No existe una cuenta con ese correo")
         } catch (e: FirebaseAuthInvalidCredentialsException) {
             ResponseService.Error("Correo o contraseña incorrectos")
         } catch (e: Exception) {
-            ResponseService.Error("Error inesperado. Intenta de nuevo")
+            ResponseService.Error("No se pudo iniciar sesión: ${e.localizedMessage}")
         }
     }
 
@@ -36,9 +39,9 @@ class AuthRepository : Authentication {
         } catch (e: FirebaseAuthUserCollisionException) {
             ResponseService.Error("Este correo ya está registrado")
         } catch (e: FirebaseAuthWeakPasswordException) {
-            ResponseService.Error("La contraseña es muy débil")
+            ResponseService.Error("La contraseña es muy débil (mínimo 6 caracteres)")
         } catch (e: Exception) {
-            ResponseService.Error("Error inesperado. Intenta de nuevo")
+            ResponseService.Error("No se pudo crear la cuenta: ${e.localizedMessage}")
         }
     }
 }

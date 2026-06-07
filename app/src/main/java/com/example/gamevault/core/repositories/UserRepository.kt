@@ -20,4 +20,16 @@ class UserRepository : UserService {
                 ResponseService.Error("No se pudo guardar el perfil: ${e.localizedMessage}")
             }
         }
+
+    override suspend fun getUserInfo(uid: String): ResponseService<UserProfile> =
+        withContext(Dispatchers.IO) {
+            try {
+                val doc = userCollection.document(uid).get().await()
+                val profile = doc.toObject(UserProfile::class.java)
+                if (profile != null) ResponseService.Success(profile)
+                else ResponseService.Error("No se encontró el perfil")
+            } catch (e: Exception) {
+                ResponseService.Error("No se pudo cargar el perfil")
+            }
+        }
 }
