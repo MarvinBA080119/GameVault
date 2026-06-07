@@ -1,8 +1,17 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.services)
 }
+
+// Lee la API key de RAWG desde local.properties (NO se sube a Git)
+val localProps = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+val rawgApiKey: String = localProps.getProperty("RAWG_API_KEY") ?: ""
 
 android {
     namespace = "com.example.gamevault"
@@ -15,6 +24,9 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // La key queda accesible como BuildConfig.RAWG_API_KEY
+        buildConfigField("String", "RAWG_API_KEY", "\"$rawgApiKey\"")
     }
 
     buildTypes {
@@ -38,6 +50,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -56,6 +69,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
+    // RecyclerView + SwipeRefresh (catálogo y pull-to-refresh)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.swiperefresh)
+
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.play.services)
@@ -65,12 +82,13 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
 
-    // Retrofit + Gson (para RAWG API — se usará en fases futuras)
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    // Retrofit + Gson (RAWG API)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.okhttp.logging)
 
-    // Glide (imágenes — se usará en fases futuras)
-    implementation("com.github.bumptech.glide:glide:4.16.0")
+    // Glide (imágenes)
+    implementation(libs.glide)
 
     // Tests
     testImplementation(libs.junit)

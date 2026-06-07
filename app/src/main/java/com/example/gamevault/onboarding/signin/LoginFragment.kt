@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -18,6 +17,7 @@ import com.example.gamevault.core.ResponseService
 import com.example.gamevault.databinding.FragmentLoginBinding
 import com.example.gamevault.home.HomeActivity
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
@@ -32,32 +32,24 @@ class LoginFragment : Fragment() {
     ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         communicator = requireActivity() as FragmentCommunicator
-        setupValidation()
         setupClickListeners()
         observeState()
         return binding.root
     }
 
-    private fun setupValidation() {
-        binding.btnLogin.isEnabled = false
-        binding.etEmailEdit.addTextChangedListener { validateAndEnable() }
-        binding.etPasswordEdit.addTextChangedListener { validateAndEnable() }
-    }
-
-    private fun validateAndEnable() {
-        val email = binding.etEmailEdit.text.toString().trim()
-        val password = binding.etPasswordEdit.text.toString().trim()
-        binding.etEmail.error = viewModel.validateEmail(email)
-        binding.etPassword.error = viewModel.validatePassword(password)
-        binding.btnLogin.isEnabled = viewModel.isLoginFormValid(email, password)
-    }
-
     private fun setupClickListeners() {
         binding.btnLogin.setOnClickListener {
-            viewModel.requestLogin(
-                binding.etEmailEdit.text.toString().trim(),
-                binding.etPasswordEdit.text.toString().trim()
-            )
+            val email = binding.etEmailEdit.text.toString().trim()
+            val password = binding.etPasswordEdit.text.toString().trim()
+
+            val emailErr = viewModel.validateEmail(email)
+            val passErr = viewModel.validatePassword(password)
+            binding.etEmail.error = emailErr
+            binding.etPassword.error = passErr
+
+            if (emailErr == null && passErr == null) {
+                viewModel.requestLogin(email, password)
+            }
         }
         binding.tvGoToRegister.setOnClickListener {
             findNavController().navigate(R.id.action_login_to_register)
@@ -65,12 +57,14 @@ class LoginFragment : Fragment() {
         binding.tvForgotPassword.setOnClickListener {
             val email = binding.etEmailEdit.text.toString().trim()
             if (email.isBlank()) {
-                Snackbar.make(binding.root, "Ingresa tu correo primero", Snackbar.LENGTH_SHORT).show()
+                binding.etEmail.error = "Ingresa tu correo primero"
             } else {
-                com.google.firebase.auth.FirebaseAuth.getInstance()
-                    .sendPasswordResetEmail(email)
+                FirebaseAuth.getInstance().sendPasswordResetEmail(email)
                     .addOnSuccessListener {
                         Snackbar.make(binding.root, "Enlace enviado a $email", Snackbar.LENGTH_LONG).show()
+                    }
+                    .addOnFailureListener {
+                        Snackbar.make(binding.root, "No se pudo enviar el enlace", Snackbar.LENGTH_LONG).show()
                     }
             }
         }

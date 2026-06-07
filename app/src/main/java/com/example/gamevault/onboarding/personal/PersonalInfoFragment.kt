@@ -2,25 +2,32 @@ package com.example.gamevault.onboarding.personal
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.gamevault.core.FragmentCommunicator
 import com.example.gamevault.core.ResponseService
 import com.example.gamevault.databinding.FragmentPersonalInfoBinding
 import com.example.gamevault.home.HomeActivity
+import com.example.gamevault.onboarding.MainActivity
+import com.example.gamevault.onboarding.personal.model.UserProfile
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.Calendar
+import androidx.navigation.fragment.findNavController
 
 class PersonalInfoFragment : Fragment() {
 
@@ -29,38 +36,28 @@ class PersonalInfoFragment : Fragment() {
     private val viewModel by viewModels<PersonalInfoViewModel>()
     private lateinit var communicator: FragmentCommunicator
 
+    private var selectedImagePath: String? = null
+
+    private val pickMedia = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri != null) {
+            selectedImagePath = copyImageToInternal(uri)
+            Glide.with(this).load(uri).centerCrop().into(binding.imgAvatar)
+            binding.imgAvatar.setPadding(0, 0, 0, 0)
+            binding.tvImageError.visibility = View.GONE
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPersonalInfoBinding.inflate(inflater, container, false)
         communicator = requireActivity() as FragmentCommunicator
-        setupValidation()
         setupDatePicker()
         setupClickListeners()
         observeState()
         return binding.root
-    }
-
-    private fun setupValidation() {
-        binding.btnContinuar.isEnabled = false
-        binding.etNombre.addTextChangedListener { validateAndEnable() }
-        binding.etApellidos.addTextChangedListener { validateAndEnable() }
-        binding.etCelular.addTextChangedListener { validateAndEnable() }
-        binding.etFecha.addTextChangedListener { validateAndEnable() }
-    }
-
-    private fun validateAndEnable() {
-        val nombre = binding.etNombre.text.toString().trim()
-        val apellidos = binding.etApellidos.text.toString().trim()
-        val celular = binding.etCelular.text.toString().trim()
-        val fecha = binding.etFecha.text.toString().trim()
-
-        binding.tilNombre.error = viewModel.validateNombre(nombre)
-        binding.tilApellidos.error = viewModel.validateApellidos(apellidos)
-        binding.tilCelular.error = viewModel.validateCelular(celular)
-        binding.tilFecha.error = viewModel.validateFecha(fecha)
-
-        binding.btnContinuar.isEnabled = viewModel.isFormValid(nombre, apellidos, celular, fecha)
     }
 
     private fun setupDatePicker() {
@@ -81,21 +78,99 @@ class PersonalInfoFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        binding.btnContinuar.setOnClickListener {
-            val uid = FirebaseAuth.getInstance().currentUser?.uid
-            if (uid == null) {
-                Snackbar.make(binding.root, "Sesión inválida", Snackbar.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
-            viewModel.saveProfile(
-                uid = uid,
-                nombre = binding.etNombre.text.toString().trim(),
-                apellidos = binding.etApellidos.text.toString().trim(),
-                celular = binding.etCelular.text.toString().trim(),
-                fecha = binding.etFecha.text.toString().trim()
+        binding.btnPickPhoto.setOnClickListener {
+            pickMedia.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
             )
         }
-        binding.btnBack.setOnClickListener { findNavController().popBackStack() }
+
+        binding.btnContinuar.setOnClickListener { onContinue() }
+
+        binding.btnCancelar.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Cancelar registro")
+                .setMessage("¿Seguro que quieres cancelar? Tendrás que iniciar sesión de nuevo.")
+                .setPositiveButton("Sí, cancelar") { _, _ ->
+                    FirebaseAuth.getInstance().signOut()
+                    startActivity(
+                        Intent(requireContext(), MainActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                    )
+                    requireActivity().finish()
+                }
+                .setNegativeButton("Volver", null)
+                .show()
+        }
+
+        binding.btnBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
+
+    private fun onContinue() {
+        val nombre = binding.etNombre.text.toString().trim()
+        val segNombre = binding.etSegundoNombre.text.toString().trim()
+        val primerApellido = binding.etPrimerApellido.text.toString().trim()
+        val segApellido = binding.etSegundoApellido.text.toString().trim()
+        val usuario = binding.etNombreUsuario.text.toString().trim()
+        val telefono = binding.etTelefono.text.toString().trim()
+        val fecha = binding.etFecha.text.toString().trim()
+
+        val errNombre = viewModel.validateRequiredName(nombre)
+        val errSegNombre = viewModel.validateOptionalName(segNombre)
+        val errPrimerAp = viewModel.validateRequiredName(primerApellido)
+        val errSegAp = viewModel.validateOptionalName(segApellido)
+        val errUsuario = viewModel.validateUsername(usuario)
+        val errTel = viewModel.validatePhone(telefono)
+        val errFecha = viewModel.validateFecha(fecha)
+
+        binding.tilNombre.error = errNombre
+        binding.tilSegundoNombre.error = errSegNombre
+        binding.tilPrimerApellido.error = errPrimerAp
+        binding.tilSegundoApellido.error = errSegAp
+        binding.tilNombreUsuario.error = errUsuario
+        binding.tilTelefono.error = errTel
+        binding.tilFecha.error = errFecha
+
+        val imageMissing = selectedImagePath == null
+        binding.tvImageError.visibility = if (imageMissing) View.VISIBLE else View.GONE
+
+        val hasError = listOf(
+            errNombre, errSegNombre, errPrimerAp, errSegAp, errUsuario, errTel, errFecha
+        ).any { it != null } || imageMissing
+
+        if (hasError) return
+
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        if (uid == null) {
+            Snackbar.make(binding.root, "Sesión inválida", Snackbar.LENGTH_LONG).show()
+            return
+        }
+
+        viewModel.saveProfile(
+            UserProfile(
+                id = uid,
+                nombre = nombre,
+                segundoNombre = segNombre,
+                primerApellido = primerApellido,
+                segundoApellido = segApellido,
+                nombreUsuario = usuario,
+                telefono = telefono,
+                fechaNacimiento = fecha,
+                fotoUrl = selectedImagePath ?: ""
+            )
+        )
+    }
+
+    private fun copyImageToInternal(uri: Uri): String {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: "user"
+        val file = File(requireContext().filesDir, "avatar_$uid.jpg")
+        requireContext().contentResolver.openInputStream(uri)?.use { input ->
+            file.outputStream().use { output -> input.copyTo(output) }
+        }
+        return file.absolutePath
     }
 
     private fun observeState() {

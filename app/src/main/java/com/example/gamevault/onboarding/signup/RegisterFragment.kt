@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -30,35 +29,27 @@ class RegisterFragment : Fragment() {
     ): View {
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
         communicator = requireActivity() as FragmentCommunicator
-        setupValidation()
         setupClickListeners()
         observeState()
         return binding.root
     }
 
-    private fun setupValidation() {
-        binding.btnRegister.isEnabled = false
-        binding.etEmailEdit.addTextChangedListener { validateAndEnable() }
-        binding.etPasswordEdit.addTextChangedListener { validateAndEnable() }
-        binding.etConfirmEdit.addTextChangedListener { validateAndEnable() }
-    }
-
-    private fun validateAndEnable() {
-        val email = binding.etEmailEdit.text.toString().trim()
-        val pass = binding.etPasswordEdit.text.toString().trim()
-        val confirm = binding.etConfirmEdit.text.toString().trim()
-        binding.etEmail.error = viewModel.validateEmail(email)
-        binding.etPassword.error = viewModel.validatePassword(pass)
-        binding.etConfirmPassword.error = viewModel.validateConfirmPassword(pass, confirm)
-        binding.btnRegister.isEnabled = viewModel.isRegisterFormValid(email, pass, confirm)
-    }
-
     private fun setupClickListeners() {
         binding.btnRegister.setOnClickListener {
-            viewModel.requestSignUp(
-                binding.etEmailEdit.text.toString().trim(),
-                binding.etPasswordEdit.text.toString().trim()
-            )
+            val email = binding.etEmailEdit.text.toString().trim()
+            val pass = binding.etPasswordEdit.text.toString().trim()
+            val confirm = binding.etConfirmEdit.text.toString().trim()
+
+            val emailErr = viewModel.validateEmail(email)
+            val passErr = viewModel.validatePassword(pass)
+            val confirmErr = viewModel.validateConfirmPassword(pass, confirm)
+            binding.etEmail.error = emailErr
+            binding.etPassword.error = passErr
+            binding.etConfirmPassword.error = confirmErr
+
+            if (emailErr == null && passErr == null && confirmErr == null) {
+                viewModel.requestSignUp(email, pass)
+            }
         }
         binding.btnBack.setOnClickListener { findNavController().popBackStack() }
         binding.tvGoToLogin.setOnClickListener { findNavController().popBackStack() }

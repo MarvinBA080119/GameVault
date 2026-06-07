@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_home"
+    app:startDestination="@id/gamesFragment">
+
+    <fragment
+        android:id="@+id/gamesFragment"
+        android:name="com.example.gamevault.home.games.GamesFragment"
+        android:label="Inicio"
+        tools:layout="@layout/fragment_games" />
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.example.gamevault.home.favorites.FavoritesFragment"
+        android:label="Lista"
+        tools:layout="@layout/fragment_favorites" />
+
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.example.gamevault.home.account.AccountFragment"
+        android:label="Cuenta"
+        tools:layout="@layout/fragment_account" />
+
+    <fragment
+        android:id="@+id/gameDetailFragment"
+        android:name="com.example.gamevault.home.gameDetail.GameDetailFragment"
+        android:label="Detalle"
+        tools:layout="@layout/fragment_game_detail">
+        <argument
+            android:name="gameId"
+            app:argType="integer" />
+    </fragment>
+
+    <!-- Acción global: cualquier lista puede abrir el detalle -->
+    <action
+        android:id="@+id/action_global_gameDetail"
+        app:destination="@id/gameDetailFragment" />
+
+</navigation>
