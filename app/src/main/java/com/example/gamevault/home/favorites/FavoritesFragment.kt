@@ -17,6 +17,7 @@ import com.example.gamevault.R
 import com.example.gamevault.core.FragmentCommunicator
 import com.example.gamevault.core.ResponseService
 import com.example.gamevault.databinding.FragmentFavoritesBinding
+import com.example.gamevault.home.HomeActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
@@ -52,7 +53,9 @@ class FavoritesFragment : Fragment() {
         binding.rvFavorites.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFavorites.adapter = adapter
         binding.btnExplorar.setOnClickListener {
-            findNavController().navigate(R.id.gamesFragment)
+            // Cambia de pestaña seleccionando el item del BottomNav (evita crash de navigate directo)
+            (requireActivity() as? HomeActivity)
+                ?.binding?.bottomNavigationView?.selectedItemId = R.id.gamesFragment
         }
         observeState()
         return binding.root

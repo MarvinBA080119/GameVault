@@ -6,4 +6,5 @@ import com.example.gamevault.onboarding.personal.model.UserProfile
 interface UserService {
     suspend fun saveUserInfo(userProfile: UserProfile): ResponseService<Unit>
     suspend fun getUserInfo(uid: String): ResponseService<UserProfile>
+    suspend fun updateUserAvatar(uid: String, avatarUrl: String): ResponseService<Unit>
 }

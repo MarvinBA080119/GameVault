@@ -33,7 +33,7 @@ class GameDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        gameId = requireArguments().getInt("gameId")
+        gameId = arguments?.getInt("gameId") ?: 0
     }
 
     override fun onCreateView(
@@ -48,7 +48,7 @@ class GameDetailFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        binding.btnBack.setOnClickListener { findNavController().popBackStack() }
+        binding.btnBack.setOnClickListener { goBack() }
 
         val toggle = View.OnClickListener {
             currentDetail?.let { viewModel.toggleFavorite(it) }
@@ -60,6 +60,13 @@ class GameDetailFragment : Fragment() {
             descriptionExpanded = !descriptionExpanded
             binding.tvDescription.maxLines = if (descriptionExpanded) Int.MAX_VALUE else 5
             binding.tvSeeMore.text = if (descriptionExpanded) "Ver menos" else "Ver más"
+        }
+    }
+
+    private fun goBack() {
+        // Intenta regresar por el back stack; si no hay nada, usa el dispatcher del sistema.
+        if (!findNavController().popBackStack()) {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
 

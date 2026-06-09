@@ -33,9 +33,14 @@
             app:argType="integer" />
     </fragment>
 
-    <!-- Acción global: cualquier lista puede abrir el detalle -->
+    <!-- Acción global: cualquier lista puede abrir el detalle.
+         enterAnim/exitAnim para transición suave; el back regresa al origen. -->
     <action
         android:id="@+id/action_global_gameDetail"
-        app:destination="@id/gameDetailFragment" />
+        app:destination="@id/gameDetailFragment"
+        app:enterAnim="@android:anim/fade_in"
+        app:exitAnim="@android:anim/fade_out"
+        app:popEnterAnim="@android:anim/fade_in"
+        app:popExitAnim="@android:anim/fade_out" />
 
 </navigation>

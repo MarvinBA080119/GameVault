@@ -1,33 +1,39 @@
 package com.example.gamevault.onboarding.personal
 
+import android.Manifest
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.example.gamevault.R
 import com.example.gamevault.core.FragmentCommunicator
 import com.example.gamevault.core.ResponseService
 import com.example.gamevault.databinding.FragmentPersonalInfoBinding
 import com.example.gamevault.home.HomeActivity
 import com.example.gamevault.onboarding.MainActivity
 import com.example.gamevault.onboarding.personal.model.UserProfile
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.Calendar
-import androidx.navigation.fragment.findNavController
 
 class PersonalInfoFragment : Fragment() {
 
@@ -37,16 +43,34 @@ class PersonalInfoFragment : Fragment() {
     private lateinit var communicator: FragmentCommunicator
 
     private var selectedImagePath: String? = null
+    private var cameraImageUri: Uri? = null
 
-    private val pickMedia = registerForActivityResult(
-        ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        if (uri != null) {
-            selectedImagePath = copyImageToInternal(uri)
-            Glide.with(this).load(uri).centerCrop().into(binding.imgAvatar)
-            binding.imgAvatar.setPadding(0, 0, 0, 0)
-            binding.tvImageError.visibility = View.GONE
-        }
+    // --- Launchers ---
+
+    private val galleryLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { onImageSelected(it) }
+    }
+
+    private val cameraLauncher = registerForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { success: Boolean ->
+        if (success) cameraImageUri?.let { onImageSelected(it) }
+    }
+
+    private val galleryPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) openGallery()
+        else Snackbar.make(binding.root, "Permiso de galería denegado", Snackbar.LENGTH_LONG).show()
+    }
+
+    private val cameraPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) openCamera()
+        else Snackbar.make(binding.root, "Permiso de cámara denegado", Snackbar.LENGTH_LONG).show()
     }
 
     override fun onCreateView(
@@ -78,11 +102,7 @@ class PersonalInfoFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        binding.btnPickPhoto.setOnClickListener {
-            pickMedia.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-            )
-        }
+        binding.btnPickPhoto.setOnClickListener { showPhotoOptions() }
 
         binding.btnContinuar.setOnClickListener { onContinue() }
 
@@ -108,6 +128,69 @@ class PersonalInfoFragment : Fragment() {
         }
     }
 
+    // --- Selección de foto (BottomSheet Cámara / Galería) ---
+
+    private fun showPhotoOptions() {
+        val sheet = BottomSheetDialog(requireContext())
+        val sheetBinding = com.example.gamevault.databinding.BottomsheetPhotoOptionsBinding.inflate(layoutInflater)
+        sheetBinding.optionCamera.setOnClickListener {
+            sheet.dismiss()
+            requestCamera()
+        }
+        sheetBinding.optionGallery.setOnClickListener {
+            sheet.dismiss()
+            requestGallery()
+        }
+        sheet.setContentView(sheetBinding.root)
+        sheet.show()
+    }
+
+    private fun requestGallery() {
+        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+        if (ContextCompat.checkSelfPermission(requireContext(), permission)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            openGallery()
+        } else {
+            galleryPermissionLauncher.launch(permission)
+        }
+    }
+
+    private fun requestCamera() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            openCamera()
+        } else {
+            cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+        }
+    }
+
+    private fun openGallery() {
+        galleryLauncher.launch("image/*")
+    }
+
+    private fun openCamera() {
+        val imageFile = File(requireContext().cacheDir, "images").apply { mkdirs() }
+            .let { File(it, "avatar_${System.currentTimeMillis()}.jpg") }
+        cameraImageUri = FileProvider.getUriForFile(
+            requireContext(),
+            "${requireContext().packageName}.fileprovider",
+            imageFile
+        )
+        cameraImageUri?.let { cameraLauncher.launch(it) }
+    }
+
+    private fun onImageSelected(uri: Uri) {
+        selectedImagePath = copyImageToInternal(uri)
+        Glide.with(this).load(uri).centerCrop().into(binding.imgAvatar)
+        binding.imgAvatar.setPadding(0, 0, 0, 0)
+        binding.tvImageError.visibility = View.GONE
+    }
 
     private fun onContinue() {
         val nombre = binding.etNombre.text.toString().trim()

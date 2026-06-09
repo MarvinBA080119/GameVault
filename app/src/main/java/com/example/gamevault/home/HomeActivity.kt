@@ -13,7 +13,8 @@ import com.example.gamevault.databinding.ActivityHomeBinding
 
 class HomeActivity : AppCompatActivity(), FragmentCommunicator {
 
-    private lateinit var binding: ActivityHomeBinding
+    lateinit var binding: ActivityHomeBinding
+        private set
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,10 +31,27 @@ class HomeActivity : AppCompatActivity(), FragmentCommunicator {
     private fun setupNavigation() {
         val navHost = supportFragmentManager
             .findFragmentById(R.id.navHostFragment) as NavHostFragment
-        binding.bottomNavigationView.setupWithNavController(navHost.navController)
+        val navController = navHost.navController
+
+        binding.bottomNavigationView.setupWithNavController(navController)
+
+        // Oculta la barra inferior en pantallas de detalle (full-screen)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            binding.bottomNavigationView.visibility =
+                when (destination.id) {
+                    R.id.gameDetailFragment -> View.GONE
+                    else -> View.VISIBLE
+                }
+        }
     }
 
     override fun manageLoader(show: Boolean) {
-        binding.loader.visibility = if (show) View.VISIBLE else View.GONE
+        if (show) {
+            binding.loader.visibility = View.VISIBLE
+            binding.loader.playAnimation()
+        } else {
+            binding.loader.cancelAnimation()
+            binding.loader.visibility = View.GONE
+        }
     }
 }

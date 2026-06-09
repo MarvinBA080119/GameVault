@@ -32,12 +32,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <ProgressBar
+    <!-- Loader animado (Lottie) centrado sobre todo el contenido -->
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/loader"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:visibility="gone"
-        android:indeterminateTint="@color/primary"
+        app:lottie_rawRes="@raw/loading_animation"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

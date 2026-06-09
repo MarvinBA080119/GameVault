@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
     private const val BASE_URL = "https://api.rawg.io/api/"  // la barra final es obligatoria
-    const val API_KEY = BuildConfig.RAWG_API_KEY
+    const val API_KEY = "5b01cae18998458e964dab9be4e9cf28"
 
     private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

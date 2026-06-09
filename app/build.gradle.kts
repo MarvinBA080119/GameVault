@@ -81,6 +81,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
 
     // Retrofit + Gson (RAWG API)
     implementation(libs.retrofit)
@@ -89,6 +90,9 @@ dependencies {
 
     // Glide (imágenes)
     implementation(libs.glide)
+
+    // Lottie (animación del loader)
+    implementation(libs.lottie)
 
     // Tests
     testImplementation(libs.junit)
