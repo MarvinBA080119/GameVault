@@ -40,11 +40,11 @@
 
         <ImageView
             android:id="@+id/imgLogo"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="79dp"
+            android:layout_height="79dp"
             android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher_round"
-            android:contentDescription="@string/app_name" />
+            android:contentDescription="@string/app_name"
+            android:src="@mipmap/paoca_logo_foreground" />
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
